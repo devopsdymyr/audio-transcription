@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./LFM2-Audio-1.5B-GGUF:/app/LFM2-Audio-1.5B-GGUF
+      - ./api.log:/app/api.log
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+

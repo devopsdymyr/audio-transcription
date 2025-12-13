@@ -1,4 +1,4 @@
-# Dockerfile for audio transcription with newer GLIBC
+# Dockerfile for FastAPI server with newer GLIBC
 FROM ubuntu:24.04
 
 # Install system dependencies
@@ -25,6 +25,9 @@ COPY . .
 # Install dependencies
 RUN uv sync
 
-# Default command
-CMD ["bash"]
+# Expose port
+EXPOSE 8001
+
+# Run the API server
+CMD ["uv", "run", "python", "run_api.py"]
 
