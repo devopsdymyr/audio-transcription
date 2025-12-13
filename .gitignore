@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+
+# Model files (too large for git)
+LFM2-Audio-1.5B-GGUF/
+*.gguf
+*.bin
+
+# Audio files (user recordings)
+*.wav
+*.mp3
+*.flac
+*.ogg
+audio-samples/*.mp3
+audio-samples/*.wav
+my_voice*.wav
+test*.wav
+custom*.wav
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+datasets/
+
+# Temporary files
+*.tmp
+audio_chunk_*.wav
+*_chunk_*.wav
+
+# Docker
+.dockerignore
+
