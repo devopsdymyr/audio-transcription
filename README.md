@@ -2,6 +2,8 @@
 
 A powerful, local-first audio transcription tool with live streaming capabilities. Transcribe audio files or record from your microphone in real-time using the LFM2-Audio-1.5B model - all running completely offline on your machine.
 
+![Frontend Screenshot](./frontend-screenshot.png)
+
 [![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
