@@ -3,8 +3,8 @@
 ## Step 1: Create Repository on GitHub
 
 1. Go to https://github.com/new
-2. Repository name: `audio-transcription-cli`
-3. Description: `Real-time audio transcription CLI using LFM2-Audio-1.5B model with microphone recording support`
+2. Repository name: `audio-transcription`
+3. Description: `Real-time audio transcription using LFM2-Audio-1.5B model with microphone recording support`
 4. Visibility: **Public** ✅
 5. **DO NOT** initialize with README, .gitignore, or license (we already have these)
 6. Click "Create repository"
@@ -24,7 +24,7 @@ Or manually:
 cd /home/kathirvel-new/poc/audio-transcription-cli-standalone
 
 # Add remote (if not already added)
-git remote add origin https://github.com/devopsdymry/audio-transcription-cli.git
+git remote add origin https://github.com/devopsdymry/audio-transcription.git
 
 # Push to GitHub
 git push -u origin main
@@ -33,7 +33,7 @@ git push -u origin main
 ## Step 3: Verify
 
 Visit your repository:
-https://github.com/devopsdymry/audio-transcription-cli
+https://github.com/devopsdymry/audio-transcription
 
 ## Alternative: Using GitHub CLI (if installed)
 
@@ -41,7 +41,7 @@ If you have GitHub CLI (`gh`) installed:
 
 ```bash
 cd /home/kathirvel-new/poc/audio-transcription-cli-standalone
-gh repo create audio-transcription-cli --public --source=. --remote=origin --push
+gh repo create audio-transcription --public --source=. --remote=origin --push
 ```
 
 ## Repository Contents

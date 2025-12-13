@@ -4,10 +4,10 @@
 
 set -e
 
-REPO_NAME="audio-transcription-cli"
+REPO_NAME="audio-transcription"
 GITHUB_USER="devopsdymry"
 
-echo "🚀 Pushing audio-transcription-cli to GitHub..."
+echo "🚀 Pushing audio-transcription to GitHub..."
 echo ""
 
 # Check if remote already exists

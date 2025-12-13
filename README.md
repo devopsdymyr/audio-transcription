@@ -32,8 +32,8 @@ Intelligent audio assistants on the edge are possible, and this repository is ju
 
 1. Clone the repository
     ```sh
-    git clone https://github.com/devopsdymry/audio-transcription-cli.git
-    cd audio-transcription-cli
+    git clone https://github.com/devopsdymry/audio-transcription.git
+    cd audio-transcription
     ```
 
 2. Install uv on your system, if you don't have it already.
