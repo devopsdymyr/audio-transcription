@@ -21,14 +21,30 @@ A powerful, local-first audio transcription tool with live streaming capabilitie
 
 ## 🎯 Model Information
 
+### About LFM2 Models
+
+LFM2 is a new generation of hybrid models developed by Liquid AI, specifically designed for edge AI and on-device deployment. It sets a new standard in terms of quality, speed, and memory efficiency.
+
+**Key Features:**
+- **Fast training & inference** – LFM2 achieves 3x faster training compared to its previous generation. It also benefits from 2x faster decode and prefill speed on CPU compared to Qwen3.
+- **Best performance** – LFM2 outperforms similarly-sized models across multiple benchmark categories, including knowledge, mathematics, instruction following, and multilingual capabilities.
+- **New architecture** – LFM2 is a new hybrid Liquid model with multiplicative gates and short convolutions.
+- **Flexible deployment** – LFM2 runs efficiently on CPU, GPU, and NPU hardware for flexible deployment on smartphones, laptops, or vehicles.
+
+We're releasing the weights of four post-trained checkpoints with 350M, 700M, 1.2B, and 2.6B parameters. They provide the following key features to create AI-powered edge applications.
+
 ### LFM2-Audio-1.5B Model
 
-- **Model**: LFM2-Audio-1.5B (Liquid AI)
+- **Model**: LFM2-Audio-1.5B
 - **Size**: ~1.5B parameters
 - **Quantization**: Q8_0 (8-bit quantization)
 - **Format**: GGUF (llama.cpp compatible)
 - **Auto-Download**: Models download automatically on first run
 - **Location**: `LFM2-Audio-1.5B-GGUF/` (created automatically)
+
+### Model Details
+
+Due to their small size, we recommend fine-tuning LFM2 models on narrow use cases to maximize performance. They are particularly suited for agentic tasks, data extraction, RAG, creative writing, and multi-turn conversations. However, we do not recommend using them for tasks that are knowledge-intensive or require programming skills.
 
 ### Model Files (Auto-Downloaded)
 
@@ -361,7 +377,7 @@ This project uses the LFM2-Audio-1.5B model from Liquid AI. Please check their l
 
 ## 🙏 Acknowledgments
 
-- [Liquid AI](https://liquid.ai/) for the LFM2-Audio-1.5B model
+- LFM2-Audio-1.5B model developers for the open-source model
 - [llama.cpp](https://github.com/ggerganov/llama.cpp) for efficient inference
 - [FastAPI](https://fastapi.tiangolo.com/) for the web framework
 
