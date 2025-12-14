@@ -23,7 +23,7 @@ A powerful, local-first audio transcription tool with live streaming capabilitie
 
 ### About LFM2 Models
 
-LFM2 is a new generation of hybrid models developed by Liquid AI, specifically designed for edge AI and on-device deployment. It sets a new standard in terms of quality, speed, and memory efficiency.
+LFM2 is a new generation of hybrid models specifically designed for edge AI and on-device deployment. It sets a new standard in terms of quality, speed, and memory efficiency.
 
 **Key Features:**
 - **Fast training & inference** – LFM2 achieves 3x faster training compared to its previous generation. It also benefits from 2x faster decode and prefill speed on CPU compared to Qwen3.
@@ -373,7 +373,7 @@ sudo apt-get install ffmpeg
 
 ## 📝 License
 
-This project uses the LFM2-Audio-1.5B model from Liquid AI. Please check their license terms.
+This project uses the LFM2-Audio-1.5B model. Please check the model's license terms.
 
 ## 🙏 Acknowledgments
 
