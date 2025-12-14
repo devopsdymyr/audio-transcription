@@ -67,7 +67,7 @@ async def get_frontend():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Audio Transcription</title>
+    <title>Voice Transcriber</title>
     <style>
         * {
             margin: 0;
@@ -77,193 +77,321 @@ async def get_frontend():
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            padding: 0;
         }
         
-        .container {
+        .header {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 900px;
-            width: 100%;
-            padding: 40px;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2.5em;
-        }
-        
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-        }
-        
-        .controls {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 24px;
             display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
-        button {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .header-title {
+            font-size: 24px;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex: 1;
-            min-width: 150px;
+            color: #1a1a1a;
         }
         
-        .record-btn {
-            background: #e74c3c;
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .connect-btn {
+            padding: 8px 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .connect-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .settings-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .settings-btn:hover {
+            background: #f5f5f5;
+        }
+        
+        .main-container {
+            display: flex;
+            height: calc(100vh - 65px);
+            gap: 1px;
+            background: #e0e0e0;
+        }
+        
+        .left-panel {
+            flex: 0 0 400px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .right-panel {
+            flex: 1;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .description {
+            padding: 16px 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .description-text {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .section {
+            padding: 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        .dropdown {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .audio-visualizer-box {
+            background: #1e3a8a;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .audio-visualizer-box.active {
+            background: #2563eb;
+        }
+        
+        .visualizer-dots {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 100%;
+        }
+        
+        .visualizer-dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% { 
+                opacity: 0.4;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+        
+        .device-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .device-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.6;
+        }
+        
+        .wave-line {
+            height: 2px;
+            background: #e0e0e0;
+            margin: 8px 0;
+            border-radius: 1px;
+        }
+        
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .chat-dropdown {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .message.transcriber .message-avatar {
+            background: #2563eb;
             color: white;
         }
         
-        .record-btn:hover:not(:disabled) {
-            background: #c0392b;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        .message.user .message-avatar {
+            background: #e5e7eb;
+            color: #333;
         }
         
-        .record-btn.recording {
-            background: #27ae60;
-            animation: pulse 1.5s infinite;
+        .message-content {
+            flex: 1;
         }
         
-        .record-btn:disabled {
+        .message-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .message-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #1a1a1a;
+        }
+        
+        .empty-state {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .record-button {
+            margin: 24px;
+            padding: 12px 24px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: calc(100% - 48px);
+        }
+        
+        .record-button:hover:not(:disabled) {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        
+        .record-button.recording {
+            background: #dc2626;
+        }
+        
+        .record-button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        .status {
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-weight: 500;
-            text-align: center;
-        }
-        
-        .status.idle {
-            background: #ecf0f1;
-            color: #7f8c8d;
-        }
-        
-        .status.recording {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .status.processing {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-        
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .transcription-box {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 20px;
-            min-height: 300px;
-            max-height: 500px;
-            overflow-y: auto;
-            font-size: 18px;
-            line-height: 1.8;
-            color: #333;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        
-        .transcription-box.empty {
-            color: #999;
-            font-style: italic;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .transcription-box .live-text {
-            color: #667eea;
-            font-weight: 600;
-        }
-        
-        .audio-visualizer {
-            height: 80px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .audio-visualizer.active {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .visualizer-bars {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            height: 100%;
-            width: 100%;
-        }
-        
-        .visualizer-bar {
-            width: 4px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 2px;
-            animation: wave 1s ease-in-out infinite;
-        }
-        
-        @keyframes wave {
-            0%, 100% { height: 20%; }
-            50% { height: 80%; }
-        }
-        
-        .info {
-            margin-top: 20px;
-            padding: 15px;
-            background: #e8f4f8;
-            border-radius: 10px;
-            font-size: 0.9em;
-            color: #0c5460;
-        }
-        
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #2563eb;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 10px;
-            vertical-align: middle;
         }
         
         @keyframes spin {
@@ -273,31 +401,82 @@ async def get_frontend():
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎤 Live Audio Transcription</h1>
-        <p class="subtitle">Real-time speech-to-text with live streaming</p>
-        
-        <div class="audio-visualizer" id="visualizer">
-            <div class="visualizer-bars" id="visualizerBars"></div>
-            <span id="visualizer-text" style="position: absolute; color: white; font-weight: 600;">Click Record to start</span>
+    <div class="header">
+        <div class="header-left">
+            <h1 class="header-title">Voice Transcriber</h1>
+            <div class="header-stats">
+                <span>🔍</span>
+                <span id="sessionId">transcriber_001</span>
+            </div>
         </div>
-        
-        <div class="controls">
-            <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+        <div class="header-actions">
+            <button class="connect-btn" id="connectBtn">Connect</button>
+            <button class="settings-btn" title="Settings">⚙️</button>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="left-panel">
+            <div class="description">
+                <p class="description-text">Real-Time Voice Transcription System Powered by LFM2 Audio Model</p>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Audio & Voice</div>
+                <select class="dropdown" id="voiceSelect">
+                    <option>Default</option>
+                    <option>High Quality</option>
+                    <option>Fast Processing</option>
+                </select>
+                <div class="audio-visualizer-box" id="audioBox">
+                    <div class="visualizer-dots" id="visualizerDots"></div>
+                    <div style="position: absolute; color: white; font-size: 14px; font-weight: 500;" id="audioBoxText">Transcriber</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Microphone</div>
+                <div class="device-info">
+                    <span class="device-icon">🎤</span>
+                    <span id="micDevice">Default Microphone</span>
+                </div>
+                <div class="wave-line"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Audio Input</div>
+                <div class="device-info">
+                    <span class="device-icon">🔊</span>
+                    <span>Live Audio Stream</span>
+                </div>
+            </div>
+            
+            <button class="record-button" id="recordBtn" onclick="toggleRecording()">
                 🎤 Start Recording
             </button>
         </div>
         
-        <div class="status idle" id="status">
-            Ready to record - Transcription will appear in real-time as you speak
-        </div>
-        
-        <div class="transcription-box empty" id="transcription">
-            Transcription will appear here in real-time as you speak...
-        </div>
-        
-        <div class="info">
-            💡 <strong>Tip:</strong> Speak clearly. Text appears in real-time as you speak (live streaming).
+        <div class="right-panel">
+            <div class="chat-header">
+                <select class="chat-dropdown" id="modelSelect">
+                    <option>LFM2 Audio 1.5B</option>
+                    <option>High Accuracy Mode</option>
+                    <option>Fast Mode</option>
+                </select>
+                <select class="chat-dropdown" id="languageSelect">
+                    <option>English</option>
+                    <option>Multi-language</option>
+                </select>
+            </div>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="empty-state" id="emptyState">
+                    <div>
+                        <p style="font-size: 16px; margin-bottom: 8px;">Welcome to Voice Transcriber</p>
+                        <p style="font-size: 14px; color: #999;">Click "Start Recording" to begin transcribing your voice</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -310,25 +489,42 @@ async def get_frontend():
         let ws = null;
         let audioChunks = [];
         let stream = null;
-        let transcriptionText = '';
+        let transcriptHistory = [];
+        let accumulatedText = '';  // Accumulate transcriptions as they come in
         
-        // Create visualizer bars
-        function createVisualizerBars() {
-            const container = document.getElementById('visualizerBars');
+        // Create visualizer dots
+        function createVisualizerDots() {
+            const container = document.getElementById('visualizerDots');
             container.innerHTML = '';
-            for (let i = 0; i < 20; i++) {
-                const bar = document.createElement('div');
-                bar.className = 'visualizer-bar';
-                bar.style.animationDelay = (i * 0.05) + 's';
-                container.appendChild(bar);
+            for (let i = 0; i < 18; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'visualizer-dot';
+                dot.style.animationDelay = (i * 0.08) + 's';
+                container.appendChild(dot);
             }
         }
         
-        createVisualizerBars();
+        createVisualizerDots();
         
-        async function toggleRecording() {
+        // Get microphone devices
+        async function updateMicrophoneDevices() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const audioInputs = devices.filter(device => device.kind === 'audioinput');
+                const micDeviceEl = document.getElementById('micDevice');
+                if (audioInputs.length > 0) {
+                    micDeviceEl.textContent = audioInputs[0].label || 'Default Microphone';
+                }
+            } catch (error) {
+                console.error('Error getting devices:', error);
+            }
+        }
+        
+        updateMicrophoneDevices();
+        
+        function toggleRecording() {
             if (!isRecording) {
-                await startRecording();
+                startRecording();
             } else {
                 stopRecording();
             }
@@ -345,7 +541,13 @@ async def get_frontend():
                     } 
                 });
                 
-                // Setup audio context for visualization
+                // Update device name
+                const tracks = stream.getAudioTracks();
+                if (tracks.length > 0) {
+                    document.getElementById('micDevice').textContent = tracks[0].label || 'Microphone';
+                }
+                
+                // Setup audio context
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const source = audioContext.createMediaStreamSource(stream);
                 analyser = audioContext.createAnalyser();
@@ -353,11 +555,12 @@ async def get_frontend():
                 source.connect(analyser);
                 dataArray = new Uint8Array(analyser.frequencyBinCount);
                 
-                // Connect WebSocket for live transcription
+                // Connect WebSocket
                 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
                 ws = new WebSocket(`${protocol}//${window.location.host}/ws/transcribe`);
                 
-                transcriptionText = '';
+                // Reset accumulated text for new session
+                accumulatedText = '';
                 
                 ws.onopen = () => {
                     console.log('WebSocket connected');
@@ -366,45 +569,41 @@ async def get_frontend():
                 ws.onmessage = (event) => {
                     const data = JSON.parse(event.data);
                     if (data.status === 'transcription') {
-                        // Live streaming - append text as it comes
                         if (data.is_final) {
-                            // Final transcription - replace all
-                            transcriptionText = data.text;
-                            updateTranscription(transcriptionText, true);
-                            document.getElementById('status').className = 'status idle';
-                            document.getElementById('status').textContent = '✅ Final transcription complete';
+                            // Final transcription - replace accumulated text
+                            accumulatedText = data.text;
+                            addMessage('transcriber', data.text, true);
                         } else {
-                            // Partial transcription - append
-                            if (data.text && !transcriptionText.includes(data.text)) {
-                                transcriptionText += ' ' + data.text;
-                                updateTranscription(transcriptionText, false);
+                            // Partial transcription - show latest chunk text for live streaming
+                            // Each chunk is processed independently and we show the latest
+                            const newText = data.text.trim();
+                            if (newText) {
+                                // For live streaming, show the latest complete chunk
+                                // We'll accumulate properly when final transcription comes
+                                updateLatestMessage('transcriber', newText);
+                                // Also keep accumulating for final version
+                                if (!accumulatedText.includes(newText)) {
+                                    accumulatedText += (accumulatedText ? ' ' : '') + newText;
+                                }
                             }
                         }
                     } else if (data.status === 'processing') {
-                        document.getElementById('status').className = 'status processing';
-                        document.getElementById('status').innerHTML = '<span class="loading"></span>' + (data.message || 'Processing...');
-                    } else if (data.status === 'received') {
-                        // Chunk received - show we're processing
-                        console.log('Chunk received:', data.chunk);
+                        updateStatus('Processing audio...');
                     } else if (data.status === 'error') {
-                        updateStatus('error', 'Error: ' + data.error);
+                        addMessage('transcriber', 'Error: ' + data.error, true);
                     }
                 };
                 
                 ws.onerror = (error) => {
                     console.error('WebSocket error:', error);
-                    updateStatus('error', 'Connection error');
                 };
                 
                 ws.onclose = () => {
                     console.log('WebSocket closed');
                 };
                 
-                // Setup MediaRecorder for chunked audio
-                const options = {
-                    mimeType: 'audio/webm;codecs=opus'
-                };
-                
+                // Setup MediaRecorder
+                const options = { mimeType: 'audio/webm;codecs=opus' };
                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
                     options.mimeType = 'audio/webm';
                     if (!MediaRecorder.isTypeSupported(options.mimeType)) {
@@ -413,58 +612,128 @@ async def get_frontend():
                 }
                 
                 mediaRecorder = new MediaRecorder(stream, options);
-                
                 audioChunks = [];
+                let chunkBuffer = [];
+                let chunkSendCounter = 0;
                 
+                // Buffer chunks before sending to ensure valid WebM files
                 mediaRecorder.ondataavailable = async (event) => {
                     if (event.data.size > 0) {
-                        // Store chunk locally
                         audioChunks.push(event.data);
+                        chunkBuffer.push(event.data);
+                        chunkSendCounter++;
                         
-                        // Send chunk via WebSocket for live processing
-                        if (ws && ws.readyState === WebSocket.OPEN) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                const base64Audio = reader.result.split(',')[1];
-                                if (ws && ws.readyState === WebSocket.OPEN) {
-                                    ws.send(JSON.stringify({
-                                        type: 'audio_chunk',
-                                        data: base64Audio,
-                                        format: 'webm',
-                                        sample_rate: 48000
-                                    }));
-                                }
-                            };
-                            reader.readAsDataURL(event.data);
+                        // Send chunks every 2 intervals (accumulate ~3-4 seconds of audio)
+                        // This ensures valid WebM files while still being responsive
+                        if (chunkSendCounter >= 2 && ws && ws.readyState === WebSocket.OPEN) {
+                            // Combine buffered chunks into a single blob
+                            const blob = new Blob(chunkBuffer, { type: 'audio/webm' });
+                            
+                            // Only send if blob is large enough to be a valid WebM file
+                            if (blob.size > 2000) {  // Minimum size for valid WebM
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                    const base64Audio = reader.result.split(',')[1];
+                                    if (ws && ws.readyState === WebSocket.OPEN) {
+                                        ws.send(JSON.stringify({
+                                            type: 'audio_chunk',
+                                            data: base64Audio,
+                                            format: 'webm',
+                                            sample_rate: 48000
+                                        }));
+                                    }
+                                };
+                                reader.readAsDataURL(blob);
+                                
+                                // Reset buffer
+                                chunkBuffer = [];
+                                chunkSendCounter = 0;
+                            }
                         }
                     }
                 };
                 
                 mediaRecorder.onstop = async () => {
-                    // Send end signal to process final audio
-                    if (ws && ws.readyState === WebSocket.OPEN) {
-                        ws.send(JSON.stringify({ type: 'end' }));
+                    // Send any remaining buffered chunks
+                    if (chunkBuffer.length > 0 && ws && ws.readyState === WebSocket.OPEN) {
+                        const blob = new Blob(chunkBuffer, { type: 'audio/webm' });
+                        if (blob.size > 500) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                                const base64Audio = reader.result.split(',')[1];
+                                if (ws && ws.readyState === WebSocket.OPEN) {
+                                    try {
+                                        ws.send(JSON.stringify({
+                                            type: 'audio_chunk',
+                                            data: base64Audio,
+                                            format: 'webm',
+                                            sample_rate: 48000
+                                        }));
+                                        // Send end signal after a short delay
+                                        setTimeout(() => {
+                                            if (ws && ws.readyState === WebSocket.OPEN) {
+                                                try {
+                                                    ws.send(JSON.stringify({ type: 'end' }));
+                                                } catch (e) {
+                                                    console.error('Error sending end signal:', e);
+                                                }
+                                            }
+                                        }, 200);
+                                    } catch (e) {
+                                        console.error('Error sending final chunk:', e);
+                                        // Try to send end signal anyway
+                                        if (ws && ws.readyState === WebSocket.OPEN) {
+                                            try {
+                                                ws.send(JSON.stringify({ type: 'end' }));
+                                            } catch (e2) {
+                                                console.error('Error sending end signal:', e2);
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+                            reader.readAsDataURL(blob);
+                        } else {
+                            // No remaining chunks, just send end signal
+                            if (ws && ws.readyState === WebSocket.OPEN) {
+                                try {
+                                    ws.send(JSON.stringify({ type: 'end' }));
+                                } catch (e) {
+                                    console.error('Error sending end signal:', e);
+                                }
+                            }
+                        }
+                    } else {
+                        // Send end signal
+                        if (ws && ws.readyState === WebSocket.OPEN) {
+                            try {
+                                ws.send(JSON.stringify({ type: 'end' }));
+                            } catch (e) {
+                                console.error('Error sending end signal:', e);
+                            }
+                        }
                     }
                 };
                 
-                // Record in small chunks (every 2 seconds) for live streaming
+                // Record in 2-second chunks for better WebM validity
+                // We buffer 2 chunks before sending (so ~4 seconds per transmission)
                 mediaRecorder.start(2000);
                 isRecording = true;
-                
-                // Start visualization
-                visualize();
                 
                 // Update UI
                 document.getElementById('recordBtn').classList.add('recording');
                 document.getElementById('recordBtn').textContent = '⏹ Stop Recording';
-                document.getElementById('status').className = 'status recording';
-                document.getElementById('status').textContent = '🔴 Recording... Speak now! (Live transcription active)';
-                document.getElementById('visualizer').classList.add('active');
-                document.getElementById('visualizer-text').textContent = 'Recording...';
+                document.getElementById('audioBox').classList.add('active');
+                document.getElementById('audioBoxText').textContent = 'Listening...';
+                document.getElementById('connectBtn').textContent = 'Connected';
+                document.getElementById('connectBtn').style.background = '#16a34a';
+                
+                visualize();
+                updateMicrophoneDevices();
                 
             } catch (error) {
                 console.error('Error accessing microphone:', error);
-                updateStatus('error', 'Microphone access denied. Please allow microphone access.');
+                addMessage('transcriber', 'Microphone access denied. Please allow microphone access.', true);
             }
         }
         
@@ -473,23 +742,20 @@ async def get_frontend():
                 mediaRecorder.stop();
                 isRecording = false;
                 
-                // Stop visualization
                 if (audioContext) {
                     audioContext.close();
                 }
                 
-                // Stop stream
                 if (stream) {
                     stream.getTracks().forEach(track => track.stop());
                 }
                 
-                // Update UI
                 document.getElementById('recordBtn').classList.remove('recording');
                 document.getElementById('recordBtn').textContent = '🎤 Start Recording';
-                document.getElementById('status').className = 'status processing';
-                document.getElementById('status').innerHTML = '<span class="loading"></span>Processing final audio...';
-                document.getElementById('visualizer').classList.remove('active');
-                document.getElementById('visualizer-text').textContent = 'Processing...';
+                document.getElementById('audioBox').classList.remove('active');
+                document.getElementById('audioBoxText').textContent = 'Transcriber';
+                document.getElementById('connectBtn').textContent = 'Connect';
+                document.getElementById('connectBtn').style.background = '#2563eb';
             }
         }
         
@@ -497,36 +763,75 @@ async def get_frontend():
             if (!isRecording || !analyser) return;
             
             analyser.getByteFrequencyData(dataArray);
-            
-            const bars = document.querySelectorAll('.visualizer-bar');
-            const step = Math.floor(dataArray.length / bars.length);
-            
-            bars.forEach((bar, i) => {
-                const value = dataArray[i * step] || 0;
-                const height = (value / 255) * 100;
-                bar.style.height = Math.max(20, height) + '%';
-            });
-            
             requestAnimationFrame(visualize);
         }
         
-        function updateTranscription(text, isFinal) {
-            const transcriptionEl = document.getElementById('transcription');
+        function addMessage(sender, text, isFinal) {
+            const container = document.getElementById('chatContainer');
+            const emptyState = document.getElementById('emptyState');
             
-            if (text) {
-                transcriptionEl.textContent = text;
-                transcriptionEl.classList.remove('empty');
-                
-                // Auto-scroll to bottom
-                transcriptionEl.scrollTop = transcriptionEl.scrollHeight;
+            if (emptyState) {
+                emptyState.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.id = sender === 'transcriber' && !isFinal ? 'latest-transcriber' : null;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = sender === 'transcriber' ? '🤖' : '👤';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            const label = document.createElement('div');
+            label.className = 'message-label';
+            label.textContent = sender === 'transcriber' ? 'Transcriber' : 'You';
+            
+            const messageText = document.createElement('div');
+            messageText.className = 'message-text';
+            messageText.textContent = text;
+            
+            content.appendChild(label);
+            content.appendChild(messageText);
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            container.appendChild(messageDiv);
+            
+            container.scrollTop = container.scrollHeight;
+            
+            if (isFinal) {
+                transcriptHistory.push({ sender, text, timestamp: Date.now() });
             }
         }
         
-        function updateStatus(type, message) {
-            const statusEl = document.getElementById('status');
-            statusEl.className = `status ${type}`;
-            statusEl.textContent = message;
+        function updateLatestMessage(sender, text) {
+            let latestMsg = document.getElementById('latest-transcriber');
+            if (!latestMsg) {
+                addMessage(sender, text, false);
+            } else {
+                const textEl = latestMsg.querySelector('.message-text');
+                if (textEl) {
+                    textEl.textContent = text;
+                    const container = document.getElementById('chatContainer');
+                    container.scrollTop = container.scrollHeight;
+                }
+            }
         }
+        
+        function updateStatus(message) {
+            console.log('Status:', message);
+        }
+        
+        // Connect button functionality
+        document.getElementById('connectBtn').addEventListener('click', function() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        });
     </script>
 </body>
 </html>
@@ -596,8 +901,8 @@ async def convert_audio_to_wav(input_path: str, input_ext: str) -> str:
         raise Exception(f"Input file not found: {input_path}")
     
     file_size = os.path.getsize(input_path)
-    if file_size < 100:  # Very small file, likely corrupted
-        raise Exception(f"Audio file too small ({file_size} bytes), likely corrupted")
+    if file_size < 1000:  # Very small file, likely corrupted/incomplete WebM
+        raise Exception(f"Audio file too small ({file_size} bytes), likely corrupted or incomplete")
     
     audio_data = None
     sample_rate = None
@@ -672,7 +977,7 @@ async def process_audio_chunk_live(websocket: WebSocket, audio_bytes: bytes, chu
         # Convert to WAV
         wav_path = await convert_audio_to_wav(temp_path, '.webm')
         
-        # Transcribe chunk (fast method)
+        # Transcribe chunk (fast method - non-blocking)
         loop = asyncio.get_event_loop()
         transcription = await loop.run_in_executor(
             None,
@@ -680,7 +985,7 @@ async def process_audio_chunk_live(websocket: WebSocket, audio_bytes: bytes, chu
             wav_path
         )
         
-        # Send partial result for live streaming
+        # Send partial result immediately for live streaming
         if transcription and len(transcription.strip()) > 0:
             await websocket.send_json({
                 "status": "transcription",
@@ -690,10 +995,13 @@ async def process_audio_chunk_live(websocket: WebSocket, audio_bytes: bytes, chu
             })
         
     except Exception as e:
-        # Don't send error for individual chunks - just log
-        print(f"Error processing chunk {chunk_num}: {str(e)}")
+        # Don't send error for individual chunks - just log (silent failure for live streaming)
+        # Filter out expected errors (small/invalid chunks)
+        error_msg = str(e)
+        if "small" not in error_msg.lower() and "invalid" not in error_msg.lower() and "corrupted" not in error_msg.lower():
+            print(f"Warning processing chunk {chunk_num}: {error_msg[:100]}")
     finally:
-        # Cleanup
+        # Cleanup temp files
         for path in [temp_path, wav_path]:
             if path and os.path.exists(path):
                 try:
@@ -793,7 +1101,8 @@ async def websocket_transcribe(websocket: WebSocket):
                         chunk_count += 1
                         
                         # Process chunk immediately for live streaming
-                        if len(audio_bytes) > 1000:  # Only process if chunk has enough data
+                        # Only process if chunk is large enough to be a valid WebM file
+                        if len(audio_bytes) > 2000:  # Minimum size for valid WebM file
                             # Process in background without blocking
                             task = asyncio.create_task(
                                 process_audio_chunk_live(websocket, audio_bytes, chunk_count, model_wrapper)
